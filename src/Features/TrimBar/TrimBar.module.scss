@@ -1,0 +1,14 @@
+.TimeBar {
+  display: flex;
+  width: 100%;
+  height: 56px;
+  overflow: hidden;
+  > div {
+    flex-grow: 1;
+    background-size: cover;
+    background-position: center;
+  }
+  img {
+    display: block;
+  }
+}
