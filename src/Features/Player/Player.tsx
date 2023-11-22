@@ -1,14 +1,19 @@
 import { useEffect, useRef, useState } from "react";
-import { Thumbnail } from "../../type";
+import { AspectRatio, Thumbnail } from "../../type";
 import styles from "./Player.module.scss";
 import classNames from "classnames";
 
 interface PlayerProps {
   src: string;
   onThumbnailGenerated: (thumbnail: Thumbnail[]) => void;
+  aspectRatio: AspectRatio;
 }
 
-export default function Player({ src, onThumbnailGenerated }: PlayerProps) {
+export default function Player({
+  src,
+  onThumbnailGenerated,
+  aspectRatio,
+}: PlayerProps) {
   const [done, setDone] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
