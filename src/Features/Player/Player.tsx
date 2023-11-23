@@ -2,40 +2,48 @@ import { useEffect, useRef, useState } from "react";
 import { AspectRatio, Thumbnail } from "../../type";
 import styles from "./Player.module.scss";
 import classNames from "classnames";
+import { getRatioHeight } from "../../utils";
 
 interface PlayerProps {
   src: string;
   onThumbnailGenerated: (thumbnail: Thumbnail[]) => void;
   aspectRatio: AspectRatio;
+  onDone: (done: boolean) => void;
+  onLoad: (video: HTMLVideoElement) => void;
 }
 
 export default function Player({
   src,
   onThumbnailGenerated,
   aspectRatio,
+  onDone,
+  onLoad,
 }: PlayerProps) {
   const [done, setDone] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     const video = videoRef.current;
-    const canvas = canvasRef.current;
+    const canvas = document.createElement("canvas");
     if (!video || !canvas) return;
     const ctx = canvas.getContext("2d");
 
     const thumbnails: Thumbnail[] = [];
     let startTime = 0;
-    let done = false;
     const frameSkipMs = 5;
 
     video.addEventListener("loadedmetadata", function () {
+      onLoad(video);
       function recursion() {
         if (startTime < video.duration) {
           video.currentTime = startTime += frameSkipMs;
-          requestAnimationFrame(recursion);
+          requestAnimationFrame(() => {
+            recursion();
+          });
         } else {
           video.currentTime = 0;
-          done = true;
+          onThumbnailGenerated && onThumbnailGenerated(thumbnails);
+          setDone(true);
+          onDone(true);
         }
       }
       recursion();
@@ -47,28 +55,22 @@ export default function Player({
     function captureThumbnail(time: number) {
       canvas.width = video.width;
       canvas.height = video.height;
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      ctx.drawImage(
+        video,
+        0,
+        0,
+        canvas.width,
+        getRatioHeight(canvas.width, aspectRatio),
+      );
 
       thumbnails.push({
         time: time as number,
         src: canvas.toDataURL("image/jpeg"),
       });
-      if (done) {
-        onThumbnailGenerated && onThumbnailGenerated(thumbnails);
-        setDone(true);
-      }
     }
   }, []);
   return (
     <div>
-      {!done && (
-        <canvas
-          ref={canvasRef}
-          width="640"
-          height="360"
-          style={{ display: "none" }}
-        />
-      )}
       {!done && <div className={styles.loading}>loading...</div>}
       <video
         width="640"
