@@ -1,10 +1,12 @@
 import React, { useCallback, useState } from "react";
 import "./index.scss";
-import videoSrc from "./assets/sample.mp4";
+import videoSrc from "./assets/Sintel.mp4";
 import { AspectRatio, Thumbnail } from "./type";
-import { Timeline, Player } from "./Features";
+import { Timeline, Player, ControlPanel } from "./Features";
 import { useGetThumbnails, useVideoControl } from "./hooks";
-import PlayButton from "./Features/PlayButton/PlayButton";
+
+import styles from "./App.module.scss";
+import classNames from "classnames";
 const aspectRatio: AspectRatio = [640, 360];
 
 function App() {
@@ -13,20 +15,36 @@ function App() {
     src: videoSrc,
     aspectRatio,
   });
-  const { onClipStart, onClipEnd, onPlay, pause } = useVideoControl({ video });
+  const {
+    onClipStart,
+    onClipEnd,
+    onPlay,
+    pause,
+    onVolumeChange,
+    volume,
+    currentTime,
+  } = useVideoControl({ video });
   return (
-    <div className="App">
+    <div className={classNames("App", styles.AppLayout)}>
       <Player src={videoSrc} aspectRatio={aspectRatio} onLoad={setVideo} />
-      <div className={"layout-flex-y gap-3"}>
-        <PlayButton onClick={onPlay} pause={pause} />
-        <div className={"layout-spread-x"}>
-          <Timeline
-            onClipStart={onClipStart}
-            onClipEnd={onClipEnd}
-            thumbnails={thumbnails}
-            aspectRatio={aspectRatio}
-            duration={duration}
+      <div>
+        <div className={"layout-flex-y gap-3"}>
+          <ControlPanel
+            onClick={onPlay}
+            pause={pause}
+            onVolumeChange={onVolumeChange}
+            volume={volume}
           />
+          <div className={"layout-spread-x"}>
+            <Timeline
+              onClipStart={onClipStart}
+              onClipEnd={onClipEnd}
+              thumbnails={thumbnails}
+              aspectRatio={aspectRatio}
+              duration={duration}
+              currentTime={currentTime}
+            />
+          </div>
         </div>
       </div>
     </div>
