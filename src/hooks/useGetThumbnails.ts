@@ -65,5 +65,5 @@ export default function useGetThumbnails({
     }
   }, [tempVideo, aspectRatio]);
 
-  return { thumbnails };
+  return { thumbnails, duration: tempVideo?.duration };
 }
