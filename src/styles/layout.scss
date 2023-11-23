@@ -9,6 +9,10 @@
   display: flex;
   justify-content: center;
 }
+.layout-flex-end {
+  display: flex;
+  justify-content: flex-end;
+}
 .layout-spread-x {
   width: 0;
   flex-grow: 1;
