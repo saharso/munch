@@ -45,6 +45,13 @@ export default function useVideoControl({ video }: VideoControlProps) {
     [video],
   );
 
+  const onCurrentTimeChange = useCallback(
+    (time: number) => {
+      video.currentTime = time;
+    },
+    [video],
+  );
+
   useEffect(() => {
     if (!video) return;
     video.volume = defaultVolume;
@@ -65,5 +72,6 @@ export default function useVideoControl({ video }: VideoControlProps) {
     onVolumeChange,
     volume,
     currentTime,
+    onCurrentTimeChange,
   };
 }
