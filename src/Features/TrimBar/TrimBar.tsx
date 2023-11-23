@@ -19,6 +19,7 @@ interface TrimBarProps {
   duration: number;
   onClipStart: (startAt: number) => void;
   onClipEnd: (endAt: number) => void;
+  currentTime: number;
 }
 export default function TrimBar({
   children,
@@ -26,11 +27,24 @@ export default function TrimBar({
   duration,
   onClipStart,
   onClipEnd,
+  currentTime,
 }: PropsWithChildren<TrimBarProps>) {
   const timeBarRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
   const leftHandleRef = useRef<HTMLDivElement>(null);
   const rightHandleRef = useRef<HTMLDivElement>(null);
+  const [clipStart, setClipStart] = useState<number>(0);
+  const [clipEnd, setClipEnd] = useState<number>();
+  const [dialPosition, setDialPosition] = useState<number>(0);
+
+  useEffect(() => {
+    setClipEnd(Math.ceil(duration));
+  }, [duration]);
+
+  useEffect(() => {
+    if (![duration, currentTime].every(Boolean)) return;
+    setDialPosition((currentTime / duration) * 100);
+  }, [currentTime, duration]);
 
   useEffect(() => {
     if (![duration, done, onClipStart].every(Boolean)) return;
@@ -65,24 +79,26 @@ export default function TrimBar({
       if (e.button !== 0) return;
       originalRight = slider.getBoundingClientRect().right - getLeft(e);
       originalLeft = slider.getBoundingClientRect().left - getLeft(e);
+      sliderWidth = !sliderWidth ? slider.offsetWidth : sliderWidth;
+    });
+    slider.addEventListener("mousedown", (e) => {
       // make sure user intends to drag
       timeout = setTimeout(() => {
         setSliderDimensions = true;
-        sliderWidth = !sliderWidth ? slider.offsetWidth : sliderWidth;
       }, 100);
     });
     document.addEventListener("mouseup", (e) => {
       clearTimeout(timeout);
       timeout = null;
+      if (setSliderDimensions) {
+        if (clipStart !== null) {
+          onClipStart(clipStart);
+        }
+        if (clipEnd !== null) {
+          onClipEnd(clipEnd);
+        }
+      }
       setSliderDimensions = false;
-      if (clipStart !== null) {
-        onClipStart(clipStart);
-        clipStart = null;
-      }
-      if (clipEnd !== null) {
-        onClipEnd(clipEnd);
-        clipEnd = null;
-      }
     });
 
     timeBar.addEventListener("mousemove", (e) => {
@@ -93,31 +109,45 @@ export default function TrimBar({
         slider.style.width = `${originalRight - left}px`;
         originalLeft = slider.getBoundingClientRect().left - getLeft(e);
         const clipStartRatio = getPosition(e) / timeBar.clientWidth;
-        clipStart = clipStartRatio * duration;
+        clipStart = Math.floor(clipStartRatio * duration);
+        setClipStart(clipStart);
       }
       if (touchRight) {
         const left = getPosition(e);
         slider.style.width = `${left - originalLeft}px`;
         originalRight = slider.getBoundingClientRect().right - getLeft(e);
         const clipEndRatio = getPosition(e) / timeBar.clientWidth;
-        clipEnd = clipEndRatio * duration;
+        clipEnd = Math.ceil(clipEndRatio * duration);
+        setClipEnd(clipEnd);
       }
     });
   }, [done, duration, onClipStart]);
 
   return (
     <div ref={timeBarRef} className={styles.Container}>
-      <div className={styles.TimeBar}>{children}</div>
+      <div className={styles.TimeBar}>
+        {children}
+        <div className={styles.Dial} style={{ left: dialPosition }} />
+      </div>
+
       {done && (
         <div ref={sliderRef} className={styles.Slider}>
           <div
             ref={leftHandleRef}
             className={classNames(styles.Handle, styles.left)}
-          />
+          >
+            <div className={styles.Tooltip}>
+              <span>{clipStart}</span>
+            </div>
+          </div>
           <div
             ref={rightHandleRef}
             className={classNames(styles.Handle, styles.right)}
-          />
+          >
+            <div className={styles.Tooltip}>
+              <span>{clipEnd}</span>
+            </div>
+          </div>
         </div>
       )}
     </div>
