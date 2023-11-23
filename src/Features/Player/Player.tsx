@@ -1,9 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { AspectRatio, Thumbnail } from "../../type";
+import { useEffect, useRef } from "react";
+import { AspectRatio } from "../../type";
 import styles from "./Player.module.scss";
 import classNames from "classnames";
-import { getRatioHeight, wait } from "../../utils";
-import { blackImage } from "../../const";
 
 interface PlayerProps {
   src: string;
@@ -12,12 +10,21 @@ interface PlayerProps {
 }
 
 export default function Player({ src, aspectRatio, onLoad }: PlayerProps) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.addEventListener("loadeddata", () => {
+      onLoad(video);
+    });
+  }, []);
   return (
     <div>
       <video
+        ref={videoRef}
         width={aspectRatio[0]}
         height={aspectRatio[1]}
-        controls
+        controls={false}
         style={{ display: "block" }}
         className={classNames(styles.Player)}
       >
