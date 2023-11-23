@@ -2,8 +2,14 @@
   display: flex;
 }
 .layout-flex-y {
+  display: flex;
   align-items: center;
 }
 .layout-flex-x {
+  display: flex;
   justify-content: center;
+}
+.layout-spread-x {
+  width: 0;
+  flex-grow: 1;
 }
