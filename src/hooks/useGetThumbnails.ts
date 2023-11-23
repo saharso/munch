@@ -27,7 +27,7 @@ export default function useGetThumbnails({
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
     const thumbnails: Thumbnail[] = [];
-    const frameSkipMs = 10;
+    const frameSkipMs = 30;
 
     video.addEventListener("loadedmetadata", async function () {
       for (let i = 1; i <= video.duration; i++) {
