@@ -4,6 +4,14 @@ import styles from "./Player.module.scss";
 import classNames from "classnames";
 import { getRatioHeight } from "../../utils";
 
+function wait() {
+  return new Promise<unknown>((resolve: (value: unknown) => void) => {
+    setTimeout(() => {
+      resolve(null);
+    }, 36);
+  });
+}
+
 interface PlayerProps {
   src: string;
   onThumbnailGenerated: (thumbnail: Thumbnail[]) => void;
@@ -29,30 +37,25 @@ export default function Player({
 
     const thumbnails: Thumbnail[] = [];
     let startTime = 0;
-    const frameSkipMs = 5;
+    const frameSkipMs = 10;
 
-    video.addEventListener("loadedmetadata", function () {
+    video.addEventListener("loadedmetadata", async function () {
       onLoad(video);
-      function recursion() {
-        if (startTime < video.duration) {
-          video.currentTime = startTime += frameSkipMs;
-          requestAnimationFrame(() => {
-            recursion();
-          });
-        } else {
-          video.currentTime = 0;
-          onThumbnailGenerated && onThumbnailGenerated(thumbnails);
-          setDone(true);
-          onDone(true);
+
+      for (let i = 1; i <= video.duration; i++) {
+        if (i % frameSkipMs === 0) {
+          await wait();
+          video.currentTime = i;
+          captureThumbnail(video.currentTime);
         }
       }
-      recursion();
+      setDone(true);
+      onThumbnailGenerated && onThumbnailGenerated(thumbnails);
     });
-    video.addEventListener("seeked", function () {
-      captureThumbnail(video.currentTime);
-    });
+    video.addEventListener("timeupdate", function () {});
 
     function captureThumbnail(time: number) {
+      console.log(video.currentTime);
       canvas.width = video.width;
       canvas.height = video.height;
       ctx.drawImage(
@@ -67,6 +70,7 @@ export default function Player({
         time: time as number,
         src: canvas.toDataURL("image/jpeg"),
       });
+      console.log(thumbnails);
     }
   }, []);
   return (
