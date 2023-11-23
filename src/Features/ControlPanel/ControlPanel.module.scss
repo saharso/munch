@@ -1,3 +1,7 @@
+.ControlPanel {
+    position: relative;
+}
+
 .PlayButton {
     border: 1px solid #fff;
     border-radius: 50%;
@@ -10,10 +14,19 @@
 
 .PlayIcon {
     display: block;
-    width: 80%;
-    height: 80%;
-    fill: #fff;
+    width: 60%;
+    height: 60%;
     &.play {
         transform: translateX(2px);
     }
+}
+
+.VolumeBarContainer {
+    background-color: black;
+    border-radius: 8px;
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    padding: 8px;
+    z-index: 2;
 }
