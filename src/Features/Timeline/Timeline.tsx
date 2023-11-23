@@ -1,21 +1,26 @@
 import { AspectRatio, Thumbnail } from "../../type";
 import { TimeBar } from "../index";
-import { useState } from "react";
 
 interface TimelineProps {
   thumbnails: Thumbnail[];
   aspectRatio: AspectRatio;
   duration: number;
+  onClipStart: (startAt: number) => void;
+  onClipEnd: (endAt: number) => void;
 }
 
-export default function Timeline({ thumbnails, duration }: TimelineProps) {
-  const [currentTime, setCurrentTime] = useState(0);
-
+export default function Timeline({
+  thumbnails,
+  duration,
+  onClipStart,
+  onClipEnd,
+}: TimelineProps) {
   return (
     <TimeBar
-      currentTime={currentTime}
       done={Boolean(thumbnails)}
       duration={duration}
+      onClipEnd={onClipEnd}
+      onClipStart={onClipStart}
     >
       {thumbnails?.map((thumbnail, index) => (
         <div
