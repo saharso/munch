@@ -7,6 +7,7 @@ import { useGetThumbnails, useVideoControl } from "./hooks";
 
 import styles from "./App.module.scss";
 import classNames from "classnames";
+import ProgressBar from "./Features/ProgressBar/ProgressBar";
 const aspectRatio: AspectRatio = [640, 360];
 
 function App() {
@@ -19,8 +20,9 @@ function App() {
     onClipStart,
     onClipEnd,
     onPlay,
-    pause,
     onVolumeChange,
+    onCurrentTimeChange,
+    pause,
     volume,
     currentTime,
   } = useVideoControl({ video });
@@ -28,6 +30,13 @@ function App() {
     <div className={classNames("App", styles.AppLayout)}>
       <Player src={videoSrc} aspectRatio={aspectRatio} onLoad={setVideo} />
       <div>
+        <div className={"row-8"}>
+          <ProgressBar
+            currentTime={currentTime}
+            onChange={onCurrentTimeChange}
+            duration={duration}
+          />
+        </div>
         <div className={"layout-flex-y gap-3"}>
           <ControlPanel
             onClick={onPlay}
