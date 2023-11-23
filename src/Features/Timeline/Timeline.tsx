@@ -7,6 +7,7 @@ interface TimelineProps {
   duration: number;
   onClipStart: (startAt: number) => void;
   onClipEnd: (endAt: number) => void;
+  currentTime: number;
 }
 
 export default function Timeline({
@@ -14,6 +15,7 @@ export default function Timeline({
   duration,
   onClipStart,
   onClipEnd,
+  currentTime,
 }: TimelineProps) {
   return (
     <TimeBar
@@ -21,6 +23,7 @@ export default function Timeline({
       duration={duration}
       onClipEnd={onClipEnd}
       onClipStart={onClipStart}
+      currentTime={currentTime}
     >
       {thumbnails?.map((thumbnail, index) => (
         <div
