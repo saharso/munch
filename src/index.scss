@@ -1,4 +1,6 @@
+@import './styles/normalize.scss';
 @import './styles/layout.scss';
+@import './styles/spacings.scss';
 
 body {
   margin: 0;
@@ -15,4 +17,10 @@ code {
 }
 .App {
   height: 100vh;
+  padding: 50px;
+  background: black;
+}
+
+* {
+  box-sizing: border-box;
 }
