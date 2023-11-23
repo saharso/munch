@@ -30,7 +30,7 @@ export default function VolumeBar({ onChange, volume }: VolumeBarProps) {
           toggleMute.current = !toggleMute.current;
         }}
       >
-        <MuteButton stroke={"white"} />
+        <MuteButton stroke={"white"} width={16} height={16} />
       </button>
       <div className={"layout-spread-x"}>
         <input

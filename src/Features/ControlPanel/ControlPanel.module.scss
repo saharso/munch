@@ -25,7 +25,7 @@
     background-color: black;
     border-radius: 8px;
     position: absolute;
-    bottom: 100%;
+    bottom: calc(100% + 18px);
     left: 0;
     padding: 8px;
     z-index: 2;
