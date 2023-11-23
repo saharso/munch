@@ -19,18 +19,20 @@ export default function Player({ src, aspectRatio, onLoad }: PlayerProps) {
     });
   }, []);
   return (
-    <div>
-      <video
-        ref={videoRef}
-        width={aspectRatio[0]}
-        height={aspectRatio[1]}
-        controls={false}
-        style={{ display: "block" }}
-        className={classNames(styles.Player)}
-      >
-        <source src={src} type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
-    </div>
+    <article className={styles.Wrapper}>
+      <div className={classNames("layout-flex-x", styles.VideoContainer)}>
+        <video
+          ref={videoRef}
+          width={aspectRatio[0]}
+          height={aspectRatio[1]}
+          controls={false}
+          style={{ display: "block" }}
+          className={classNames(styles.Player)}
+        >
+          <source src={src} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </article>
   );
 }
