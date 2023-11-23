@@ -1,7 +1,11 @@
+.Container {
+  position: relative;
+}
 .TimeBar {
   display: flex;
   width: 100%;
   height: 56px;
+  border-radius: 5000px;
   overflow: hidden;
   > div {
     flex-grow: 1;
@@ -11,4 +15,51 @@
   img {
     display: block;
   }
+}
+.Slider {
+  height: 100%;
+  position: absolute;
+  top: 0;
+  border-style: solid;
+  border-color: #fff;
+  border-width: 2px 6px;
+  border-radius: 20px;
+  box-shadow: 0 0 51px -12px rgba(0,0,0,0.75), 0px 0px 51px -12px rgba(255,255,255,0.75) inset;
+}
+.Handle {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 20px;
+
+  cursor: col-resize;
+  &.left {
+    left: 0;
+  }
+  &.right {
+      right: 0;
+  }
+}
+.Tooltip {
+  position: absolute;
+  bottom: 100%;
+  padding-bottom: 10px;
+  span {
+    font-size: 12px;
+    display: block;
+    padding: 2px 4px;
+    border-radius: 4px;
+    background-color: #fff;
+  }
+}
+.Dial {
+  width: 4px;
+  background-color: rgba(200,0,0,0.5);
+  border-radius: 4px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
 }
