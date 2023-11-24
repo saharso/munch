@@ -11,6 +11,7 @@ export default function useVideoControl({ video }: VideoControlProps) {
   const [volume, steVolume] = useState(defaultVolume);
   const [currentTime, setCurrentTime] = useState(0);
   const [clipRange, setClipRange] = useState<[number, number]>([0, 0]);
+  const [clippedDuration, setClippedDuration] = useState<number>();
 
   const onClipStart = useCallback(
     (startAt: number) => {
@@ -68,6 +69,11 @@ export default function useVideoControl({ video }: VideoControlProps) {
     });
   }, [video]);
 
+  useEffect(() => {
+    if (![clipRange, video].every(Boolean)) return;
+    setClippedDuration(clipRange[1] - clipRange[0]);
+  }, [clipRange, video]);
+
   return {
     onClipStart,
     clipRange,
@@ -78,5 +84,6 @@ export default function useVideoControl({ video }: VideoControlProps) {
     volume,
     currentTime,
     onCurrentTimeChange,
+    clippedDuration,
   };
 }

@@ -26,6 +26,7 @@ function App() {
     volume,
     currentTime,
     clipRange,
+    clippedDuration,
   } = useVideoControl({ video });
   return (
     <div className={classNames("App", styles.AppLayout)}>
@@ -36,6 +37,7 @@ function App() {
             currentTime={currentTime}
             onChange={onCurrentTimeChange}
             clipRange={clipRange}
+            clippedDuration={clippedDuration}
           />
         </div>
         <div className={"layout-flex-y gap-3"}>
