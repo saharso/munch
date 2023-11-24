@@ -127,7 +127,7 @@ export default function TrimBar({
     <div ref={timeBarRef} className={styles.Container}>
       <div className={styles.TimeBar}>
         {children}
-        <div className={styles.Dial} style={{ left: dialPosition }} />
+        <div className={styles.Dial} style={{ left: `${dialPosition}%` }} />
       </div>
 
       {done && (
