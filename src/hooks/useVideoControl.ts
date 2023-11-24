@@ -10,17 +10,20 @@ export default function useVideoControl({ video }: VideoControlProps) {
   const [pause, setPause] = useState(false);
   const [volume, steVolume] = useState(defaultVolume);
   const [currentTime, setCurrentTime] = useState(0);
+  const [clipRange, setClipRange] = useState<[number, number]>([0, 0]);
 
   const onClipStart = useCallback(
     (startAt: number) => {
       if (!video) return;
       video.currentTime = startAt;
+      setClipRange((prev) => [startAt, prev[1]]);
     },
     [video],
   );
   const onClipEnd = useCallback(
     (endAt: number) => {
       clipEnd.current = endAt;
+      setClipRange((prev) => [prev[0], endAt]);
     },
     [video],
   );
@@ -54,6 +57,7 @@ export default function useVideoControl({ video }: VideoControlProps) {
 
   useEffect(() => {
     if (!video) return;
+    setClipRange([0, video.duration]);
     video.volume = defaultVolume;
     video.addEventListener("timeupdate", () => {
       const stopPoint = clipEnd.current;
@@ -66,6 +70,7 @@ export default function useVideoControl({ video }: VideoControlProps) {
 
   return {
     onClipStart,
+    clipRange,
     onClipEnd,
     onPlay,
     pause,

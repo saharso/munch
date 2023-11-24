@@ -25,6 +25,7 @@ function App() {
     pause,
     volume,
     currentTime,
+    clipRange,
   } = useVideoControl({ video });
   return (
     <div className={classNames("App", styles.AppLayout)}>
@@ -34,7 +35,7 @@ function App() {
           <ProgressBar
             currentTime={currentTime}
             onChange={onCurrentTimeChange}
-            duration={duration}
+            clipRange={clipRange}
           />
         </div>
         <div className={"layout-flex-y gap-3"}>
