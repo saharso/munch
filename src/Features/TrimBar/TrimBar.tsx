@@ -62,6 +62,8 @@ export default function TrimBar({
     let originalLeft: number = null;
     let clipStart: number = null;
     let clipEnd: number = null;
+    let gapBetweenMouseXAndSliderLeft: number = null;
+    let gapBetweenMouseXAndSliderRight: number = null;
 
     slider.style.left = "0";
     slider.style.width = "100%";
@@ -69,10 +71,14 @@ export default function TrimBar({
     leftHandle.addEventListener("mousedown", (e) => {
       touchLeft = true;
       touchRight = false;
+      gapBetweenMouseXAndSliderLeft =
+        e.clientX - slider.getBoundingClientRect().left;
     });
     rightHandle.addEventListener("mousedown", (e) => {
       touchLeft = false;
       touchRight = true;
+      gapBetweenMouseXAndSliderRight =
+        slider.getBoundingClientRect().right - e.clientX;
     });
     timeBar.addEventListener("mousedown", (e) => {
       // prevent right click
@@ -104,7 +110,7 @@ export default function TrimBar({
     timeBar.addEventListener("mousemove", (e) => {
       if (!setSliderDimensions) return;
       if (touchLeft) {
-        const left = getPosition(e);
+        const left = getPosition(e) - gapBetweenMouseXAndSliderLeft;
         slider.style.left = left + "px";
         slider.style.width = `${originalRight - left}px`;
         originalLeft = slider.getBoundingClientRect().left - getLeft(e);
@@ -113,7 +119,7 @@ export default function TrimBar({
         setClipStart(clipStart);
       }
       if (touchRight) {
-        const left = getPosition(e);
+        const left = getPosition(e) + gapBetweenMouseXAndSliderRight;
         slider.style.width = `${left - originalLeft}px`;
         originalRight = slider.getBoundingClientRect().right - getLeft(e);
         const clipEndRatio = getPosition(e) / timeBar.clientWidth;
