@@ -110,19 +110,19 @@ export default function TrimBar({
     timeBar.addEventListener("mousemove", (e) => {
       if (!setSliderDimensions) return;
       if (touchLeft) {
-        const left = getPosition(e) - gapBetweenMouseXAndSliderLeft;
-        slider.style.left = left + "px";
-        slider.style.width = `${originalRight - left}px`;
-        originalLeft = slider.getBoundingClientRect().left - getLeft(e);
-        const clipStartRatio = getPosition(e) / timeBar.clientWidth;
+        const pos = getPosition(e) - gapBetweenMouseXAndSliderLeft;
+        if (pos < 0) return;
+        slider.style.left = pos + "px";
+        slider.style.width = `${originalRight - pos}px`;
+        const clipStartRatio = pos / timeBar.clientWidth;
         clipStart = Math.floor(clipStartRatio * duration);
         setClipStart(clipStart);
       }
       if (touchRight) {
-        const left = getPosition(e) + gapBetweenMouseXAndSliderRight;
-        slider.style.width = `${left - originalLeft}px`;
-        originalRight = slider.getBoundingClientRect().right - getLeft(e);
-        const clipEndRatio = getPosition(e) / timeBar.clientWidth;
+        const pos = getPosition(e) + gapBetweenMouseXAndSliderRight;
+        if (pos > timeBar.clientWidth) return;
+        slider.style.width = `${pos - originalLeft}px`;
+        const clipEndRatio = pos / timeBar.clientWidth;
         clipEnd = Math.ceil(clipEndRatio * duration);
         setClipEnd(clipEnd);
       }
