@@ -19,7 +19,7 @@ export default function useGetThumbnails({
     video.width = aspectRatio[0];
     video.height = aspectRatio[1];
     return video;
-  }, [aspectRatio]);
+  }, [aspectRatio, src]);
 
   useEffect(() => {
     if (![tempVideo, aspectRatio].some(Boolean)) return;
@@ -63,7 +63,7 @@ export default function useGetThumbnails({
         });
       }
     }
-  }, [tempVideo, aspectRatio]);
+  }, [tempVideo, aspectRatio, src]);
 
   return { thumbnails, duration: tempVideo?.duration };
 }
