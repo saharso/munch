@@ -1,13 +1,13 @@
 import React, { useCallback, useState } from "react";
 import "./index.scss";
-import videoSrc from "./assets/Sintel.mp4";
-import { AspectRatio, Thumbnail } from "./type";
+import videoSrc from "./assets/ForBiggerEscapes.mp4";
+import { AspectRatio } from "./type";
 import { Timeline, Player, ControlPanel } from "./Features";
 import { useGetThumbnails, useVideoControl } from "./hooks";
-
 import styles from "./App.module.scss";
 import classNames from "classnames";
 import ProgressBar from "./Features/ProgressBar/ProgressBar";
+
 const aspectRatio: AspectRatio = [640, 360];
 
 function App() {
