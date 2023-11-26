@@ -1,6 +1,7 @@
 import { PropsWithChildren, useEffect, useRef, useState } from "react";
 import styles from "./TrimBar.module.scss";
 import classNames from "classnames";
+import { getFormattedTime } from "../../utils";
 
 function getLeft(e: MouseEvent) {
   const target = e.currentTarget as HTMLElement;
@@ -9,6 +10,7 @@ function getLeft(e: MouseEvent) {
 function getPosition(e: MouseEvent) {
   return e.clientX - getLeft(e);
 }
+
 interface TrimBarProps {
   done: boolean;
   duration: number;
@@ -33,7 +35,7 @@ export default function TrimBar({
   const [dialPosition, setDialPosition] = useState<number>(0);
 
   useEffect(() => {
-    setClipEnd(Math.ceil(duration));
+    setClipEnd(duration);
   }, [duration]);
 
   useEffect(() => {
@@ -110,7 +112,7 @@ export default function TrimBar({
         slider.style.left = pos + "px";
         slider.style.width = `${originalRight - pos}px`;
         const clipStartRatio = pos / timeBar.clientWidth;
-        clipStart = Math.floor(clipStartRatio * duration);
+        clipStart = clipStartRatio * duration;
         setClipStart(clipStart);
       }
       if (touchRight) {
@@ -118,7 +120,7 @@ export default function TrimBar({
         if (pos > timeBar.clientWidth) return;
         slider.style.width = `${pos - originalLeft}px`;
         const clipEndRatio = pos / timeBar.clientWidth;
-        clipEnd = Math.ceil(clipEndRatio * duration);
+        clipEnd = clipEndRatio * duration;
         setClipEnd(clipEnd);
       }
     });
@@ -128,7 +130,11 @@ export default function TrimBar({
     <div ref={timeBarRef} className={styles.Container}>
       <div className={styles.TimeBar}>
         {children}
-        <div className={styles.Dial} style={{ left: `${dialPosition}%` }} />
+        <div
+          data-test={"Dial"}
+          className={styles.Dial}
+          style={{ left: `${dialPosition}%` }}
+        />
       </div>
 
       {done && (
@@ -138,7 +144,7 @@ export default function TrimBar({
             className={classNames(styles.Handle, styles.left)}
           >
             <div className={styles.Tooltip}>
-              <span>{clipStart}</span>
+              <span>{getFormattedTime(clipStart)}</span>
             </div>
           </div>
           <div
@@ -146,7 +152,7 @@ export default function TrimBar({
             className={classNames(styles.Handle, styles.right)}
           >
             <div className={styles.Tooltip}>
-              <span>{clipEnd}</span>
+              <span>{getFormattedTime(clipEnd)}</span>
             </div>
           </div>
         </div>
