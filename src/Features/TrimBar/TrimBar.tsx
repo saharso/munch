@@ -9,11 +9,6 @@ function getLeft(e: MouseEvent) {
 function getPosition(e: MouseEvent) {
   return e.clientX - getLeft(e);
 }
-function getTimeRatio(e: MouseEvent) {
-  const target = e.currentTarget as HTMLElement;
-  return getPosition(e) / target.clientWidth;
-}
-
 interface TrimBarProps {
   done: boolean;
   duration: number;
