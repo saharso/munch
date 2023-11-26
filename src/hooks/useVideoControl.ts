@@ -1,10 +1,23 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  MutableRefObject,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 interface VideoControlProps {
   video: HTMLVideoElement;
 }
 
 const defaultVolume = 0.5;
+function exceedClipEnd(
+  clipEnd: MutableRefObject<number>,
+  video: HTMLVideoElement,
+) {
+  return clipEnd.current && video.currentTime >= clipEnd.current;
+}
+
 export default function useVideoControl({ video }: VideoControlProps) {
   const clipEnd = useRef<number>();
   const [pause, setPause] = useState(false);
@@ -30,7 +43,7 @@ export default function useVideoControl({ video }: VideoControlProps) {
   );
   const onPlay = useCallback(
     (play: boolean) => {
-      if (!video) return;
+      if (!video || exceedClipEnd(clipEnd, video)) return;
       if (!play) {
         video.pause();
       } else {
@@ -61,8 +74,7 @@ export default function useVideoControl({ video }: VideoControlProps) {
     setClipRange([0, video.duration]);
     video.volume = defaultVolume;
     video.addEventListener("timeupdate", () => {
-      const stopPoint = clipEnd.current;
-      if (stopPoint && video.currentTime >= stopPoint) {
+      if (exceedClipEnd(clipEnd, video)) {
         video.pause();
       }
       setCurrentTime(video.currentTime);
