@@ -22,7 +22,7 @@ function App() {
     onPlay,
     onVolumeChange,
     onCurrentTimeChange,
-    pause,
+    isPlay,
     volume,
     currentTime,
     clipRange,
@@ -43,7 +43,7 @@ function App() {
         <div className={"layout-flex-y gap-3"}>
           <ControlPanel
             onClick={onPlay}
-            pause={pause}
+            pause={isPlay}
             onVolumeChange={onVolumeChange}
             volume={volume}
           />

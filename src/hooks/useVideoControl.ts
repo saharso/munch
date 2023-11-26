@@ -20,7 +20,7 @@ function exceedClipEnd(
 
 export default function useVideoControl({ video }: VideoControlProps) {
   const clipEnd = useRef<number>();
-  const [pause, setPause] = useState(false);
+  const [isPlay, setIsPlay] = useState(false);
   const [volume, steVolume] = useState(defaultVolume);
   const [currentTime, setCurrentTime] = useState(0);
   const [clipRange, setClipRange] = useState<[number, number]>([0, 0]);
@@ -29,6 +29,8 @@ export default function useVideoControl({ video }: VideoControlProps) {
   const onClipStart = useCallback(
     (startAt: number) => {
       if (!video) return;
+      video.pause();
+      setIsPlay(false);
       video.currentTime = startAt;
       setClipRange((prev) => [startAt, prev[1]]);
     },
@@ -36,6 +38,9 @@ export default function useVideoControl({ video }: VideoControlProps) {
   );
   const onClipEnd = useCallback(
     (endAt: number) => {
+      if (!video) return;
+      video.pause();
+      setIsPlay(false);
       clipEnd.current = endAt;
       setClipRange((prev) => [prev[0], endAt]);
     },
@@ -49,7 +54,7 @@ export default function useVideoControl({ video }: VideoControlProps) {
       } else {
         void video.play();
       }
-      setPause(play);
+      setIsPlay(play);
     },
     [video],
   );
@@ -91,7 +96,7 @@ export default function useVideoControl({ video }: VideoControlProps) {
     clipRange,
     onClipEnd,
     onPlay,
-    pause,
+    isPlay,
     onVolumeChange,
     volume,
     currentTime,
